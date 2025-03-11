@@ -4,3 +4,6 @@ venv/
 # Python bytecode files
 *.pyc
 __pycache__/
+
+# enviromental variables
+.env
