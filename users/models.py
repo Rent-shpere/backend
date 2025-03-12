@@ -14,7 +14,8 @@ class User(AbstractUser):
     
     
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='tenant')
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, blank=False)
+    
     
     def __str__(self):
-        return f"{self.username} - {self.role}"
+        return f'{self.first_name} {self.last_name}'
