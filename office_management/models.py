@@ -7,10 +7,20 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Office(models.Model):
-    officeNo = models.CharField(max_length=10)
-    area = models.DecimalField(max_digits=5, decimal_places=2)
-    floorNo = models.IntegerField()
-    status = models.Choices('available', 'rented', 'under_maintenance')
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('rented', 'Rented'),
+        ('under_maintenance', 'Under Maintenance'),
+    ]
+    
+    officeNo = models.CharField(max_length=10, unique=True, blank=False, null=False)
+    area = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
+    floorNo = models.IntegerField(blank=False, null=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=False, null=False, default='available')   
+    
+
+    def __str__(self):
+        return f'officeNo -- {self.officeNo}'
     
     
 class Rental(models.Model):
@@ -19,6 +29,11 @@ class Rental(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     monthlyRent = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def save(self, *args, **kwargs):
+        self.officeId.status = 'rented'
+        self.officeId.save()
+        super().save(*args, **kwargs)
     
     
 class Payment(models.Model):
